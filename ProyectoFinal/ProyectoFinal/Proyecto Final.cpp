@@ -1,5 +1,5 @@
 /*--------------------------------------------------------*/
-/* ----------------  Práctica 7 --------------------------*/
+/* ----------------  Proyecto Final (WP) --------------------------*/
 /*-----------------    2022-2  ---------------------------*/
 /*-------- Alumno: Saúl Abraham Esparza Rivera -----------*/
 /*-------- Cuenta: 314041502 -----------------------------*/
@@ -39,7 +39,7 @@ void DoMovement( );
 
 
 // Camera
-Camera camera( glm::vec3( 0.0f, 0.0f, 3.0f ) );
+Camera camera( glm::vec3( 0.0f, 0.5f, 1.0f ) );
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
@@ -62,7 +62,7 @@ int main( )
     glfwWindowHint( GLFW_RESIZABLE, GL_FALSE );
     
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "Practica 7", nullptr, nullptr );
+    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "[WP] Proyecto final", nullptr, nullptr ); // Le pongo WP por aquello del Work in Progress
     
     if ( nullptr == window )
     {
