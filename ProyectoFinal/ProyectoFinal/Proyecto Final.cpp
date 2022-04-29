@@ -155,6 +155,8 @@ int main( )
     Model Mesita((char*)"Models/Mesita/Mesa peque.obj");
     Model Silla((char*)"Models/Silla/Silla.obj");
     Model Cafe((char*)"Models/Cafe/Tacita.obj");
+    Model PisoCafe((char*)"Models/PisoCafe/PisoCafe.obj");
+    Model Galletas((char*)"Models/Galletas/Plato.obj");
 
 
     GLuint texture;
@@ -218,7 +220,7 @@ int main( )
 
         //Silla
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-0.3f, 0.02f, 0.0f));
         model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
         model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
@@ -227,11 +229,31 @@ int main( )
 
         //Taza de café
         model = glm::mat4(1);
-        model = glm::translate(model, glm::vec3(0.0f, 0.42f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 0.42f, -0.1f));
         model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
         model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         Cafe.Draw(shader);
+        glBindVertexArray(0);
+
+        //Piso del café
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.2f));
+        model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+        //model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        PisoCafe.Draw(shader);
+        glBindVertexArray(0);
+
+
+
+        //Plato con galletas
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(0.0f, 0.40f, 0.05f));
+        model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+        //model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        Galletas.Draw(shader);
         glBindVertexArray(0);
 
 
