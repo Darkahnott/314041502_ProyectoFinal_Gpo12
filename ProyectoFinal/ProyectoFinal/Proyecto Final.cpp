@@ -29,7 +29,7 @@
 
 
 // Properties
-const GLuint WIDTH = 800, HEIGHT = 600;
+const GLuint WIDTH = 1080, HEIGHT = 720;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Function prototypes
@@ -158,6 +158,7 @@ int main( )
     Model PisoCafe((char*)"Models/PisoCafe/PisoCafe.obj");
     Model Galletas((char*)"Models/Galletas/Plato.obj");
     Model Base((char*)"Models/Base/Base.obj");
+    Model Bar((char*)"Models/Bar/Bar.obj");
     /*Model Jeep((char*)"Models/Jeep/Jeep.obj");*/
 
 
@@ -245,16 +246,17 @@ int main( )
         glBindVertexArray(0);
 
 
-        //Plato con galletas
+        //Barra de servicio
         model = glm::mat4(1);
-        model = glm::translate(tmp2, glm::vec3(0.0f, 0.0f, 0.30f));
-        model = glm::scale(model, glm::vec3(0.067f, 0.067f, 0.067f));
+        model = glm::translate(tmp, glm::vec3(3.0f, 0.0f, -2.0f));
+        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        Galletas.Draw(shader);
+        Bar.Draw(shader);
         glBindVertexArray(0);
+        
 
 
-        ////Jeep
+        //////Jeep
         //model = glm::mat4(1);
         ////model = glm::translate(model, glm::vec3(0.0f, 0.40f, 0.05f));
         ////model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
