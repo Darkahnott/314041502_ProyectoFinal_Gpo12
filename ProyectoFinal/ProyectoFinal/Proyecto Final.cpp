@@ -4,8 +4,8 @@
 /*-------- Alumno: Saúl Abraham Esparza Rivera -----------*/
 /*-------- Cuenta: 314041502 -----------------------------*/
 
-// Std. Includes
-#include <string>
+#include <iostream>
+#include <cmath>
 
 // GLEW
 #include <GL/glew.h>
@@ -14,19 +14,21 @@
 #include <GLFW/glfw3.h>
 
 // Other Libs
-#include "SOIL2/SOIL2.h"
 #include "stb_image.h"
 
-// GL includes
-#include "Shader.h"
-#include "Camera.h"
-#include "Model.h"
-
-// GLM Mathemtics
+// GLM Mathematics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//Load Models
+#include "SOIL2/SOIL2.h"
+
+// Other includes
+#include "Shader.h"
+#include "Camera.h"
+#include "Model.h"
+#include "Texture.h"
 
 // Properties
 const GLuint WIDTH = 1080, HEIGHT = 720;
@@ -40,8 +42,10 @@ void DoMovement( );
 
 // Camera
 Camera camera(glm::vec3(0.5f, 1.5f, 29.0f));
+GLfloat lastX = WIDTH / 2.0;
+GLfloat lastY = HEIGHT / 2.0;
+
 bool keys[1024];
-GLfloat lastX = 540, lastY = 360;
 bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
@@ -78,10 +82,10 @@ int main( )
     
     // Set the required callback functions
     glfwSetKeyCallback( window, KeyCallback );
-    glfwSetCursorPosCallback( window, MouseCallback );
+    glfwSetCursorPosCallback(window, MouseCallback);
     
-    // GLFW Options
-    //glfwSetInputMode( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
+    // GLFW Options -- Activado para contener el mouse y poder mirar el escenario más fácil
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
     // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
     glewExperimental = GL_TRUE;
@@ -101,7 +105,7 @@ int main( )
     // Setup and compile our shaders
     Shader shader( "Shaders/modelLoading.vs", "Shaders/modelLoading.frag" );
     Shader lampshader( "Shaders/lamp.vs", "Shaders/lamp.frag" );
-    
+    Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 
 
 
@@ -118,6 +122,53 @@ int main( )
     -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 
     };
+
+
+    GLfloat skyboxVertices[] = {
+        // Positions
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f
+    };
+
 
     GLuint indices[] =
     {  // Note that we start from 0!
@@ -150,29 +201,44 @@ int main( )
     glEnableVertexAttribArray(2);
 
     // Load textures
-    //Model Poke1((char*)"Model/Pokeball/Parte_de_arriba.obj");
-    //Model Poke2((char*)"Model/Pokeball/Parte_de_abajo.obj");
-    Model Mesita((char*)"Models/Mesita/Mesa peque.obj");
-    Model Silla((char*)"Models/Silla/Silla.obj");
-    Model Cafe((char*)"Models/Cafe/Tacita.obj");
-    Model PisoCafe((char*)"Models/PisoCafe/PisoCafe.obj");
-    Model Galletas((char*)"Models/Galletas/Plato.obj");
+    Model Cafe((char*)"Models/Cafe New/Cafe.obj");
     Model Base((char*)"Models/Base/Base.obj");
-    Model Bar((char*)"Models/Bar/Bar.obj");
-    /*Model Jeep((char*)"Models/Jeep/Jeep.obj");*/
+
 
 
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     int textureWidth, textureHeight, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
+    //stbi_set_flip_vertically_on_load(true);
     unsigned char* image;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
   
+
+
+    //SkyBox
+    GLuint skyboxVBO, skyboxVAO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+    // Load textures
+    vector<const GLchar*> faces;
+    faces.push_back("SkyBox/right.tga");
+    faces.push_back("SkyBox/left.tga");
+    faces.push_back("SkyBox/up.tga");
+    faces.push_back("SkyBox/down.tga");
+    faces.push_back("SkyBox/back.tga");
+    faces.push_back("SkyBox/front.tga");
+
+    GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
 
 
 
@@ -216,54 +282,9 @@ int main( )
         model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
         //model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        PisoCafe.Draw(shader);
-        glBindVertexArray(0);
-
-
-        //Mesita
-        model = glm::mat4(1);
-        tmp2 = model = glm::translate(tmp, glm::vec3(-3.0f, 0.0f, 3.7f));
-        model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        Mesita.Draw(shader);
-        glBindVertexArray(0);
-
-        //Silla
-        model = glm::mat4(1);
-        model = glm::translate(tmp2, glm::vec3(-0.73f, 0.00f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.09f, 0.09f, 0.09f));
-        model = glm::rotate(model, glm::radians(52.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        Silla.Draw(shader);
-        glBindVertexArray(0);
-
-        //Taza de café
-        model = glm::mat4(1);
-        tmp2 = model = glm::translate(tmp2, glm::vec3(0.0f, 1.2f, -0.1f));
-        model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         Cafe.Draw(shader);
         glBindVertexArray(0);
 
-
-        //Barra de servicio
-        model = glm::mat4(1);
-        model = glm::translate(tmp, glm::vec3(3.0f, 0.0f, -2.0f));
-        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        Bar.Draw(shader);
-        glBindVertexArray(0);
-        
-
-
-        //////Jeep
-        //model = glm::mat4(1);
-        ////model = glm::translate(model, glm::vec3(0.0f, 0.40f, 0.05f));
-        ////model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
-        ////model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        //glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        //Jeep.Draw(shader);
-        //glBindVertexArray(0);
 
 
 
@@ -274,6 +295,26 @@ int main( )
         lampshader.Use();
  
         glBindVertexArray(0);
+
+
+        // Draw skybox as last
+        glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
+        SkyBoxshader.Use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
+        glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        // skybox cube
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        //glDepthFunc(GL_LESS); // Set depth function back to default
+
+
+
+
 
         // Swap the buffers
         glfwSwapBuffers( window );
@@ -311,19 +352,6 @@ void DoMovement( )
     {
         camera.ProcessKeyboard( RIGHT, deltaTime );
     }
-    
-    if (anim) {
-        if (rot < 20)
-            rot += 0.01;
- }
-
-    if (anim2) {
-        if (rot >= 0)
-            rot -= 0.01;   
-    }
-
-
- 
 
  
 
@@ -370,22 +398,22 @@ void KeyCallback( GLFWwindow *window, int key, int scancode, int action, int mod
  
 }
 
-void MouseCallback( GLFWwindow *window, double xPos, double yPos )
+void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 {
-    if ( firstMouse )
+
+    if (firstMouse)
     {
         lastX = xPos;
         lastY = yPos;
         firstMouse = false;
     }
-    
+
     GLfloat xOffset = xPos - lastX;
     GLfloat yOffset = lastY - yPos;  // Reversed since y-coordinates go from bottom to left
-    
+
     lastX = xPos;
     lastY = yPos;
-    
-    camera.ProcessMouseMovement( xOffset, yOffset );
-}
 
+    camera.ProcessMouseMovement(xOffset, yOffset);
+}
 

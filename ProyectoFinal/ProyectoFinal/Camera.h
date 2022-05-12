@@ -5,9 +5,11 @@
 
 // GL Includes
 #define GLEW_STATIC
+#define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
+#include "glm/ext.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -22,8 +24,8 @@ enum Camera_Movement
 // Default camera values
 const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 6.0f;
-const GLfloat SENSITIVTY = 0.15f;
+const GLfloat SPEED = 8.0f;
+const GLfloat SENSITIVTY = 0.13f;
 const GLfloat ZOOM = 45.0f;
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
@@ -53,6 +55,9 @@ public:
 	// Returns the view matrix calculated using Eular Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix()
 	{
+		//Imprimir la posición de la cámara
+		std::cout << "La posicion actual de la camara es: " << glm::to_string(position) << "\n" << std::endl; //F por los acentos
+
 		return glm::lookAt(this->position, this->position + this->front, this->up);
 	}
 

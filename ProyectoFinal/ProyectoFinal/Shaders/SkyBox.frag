@@ -7,4 +7,6 @@ uniform samplerCube skybox;
 void main()
 {
     color = texture(skybox, TexCoords);
+    if (color.a<0.1)
+        discard;
 }
