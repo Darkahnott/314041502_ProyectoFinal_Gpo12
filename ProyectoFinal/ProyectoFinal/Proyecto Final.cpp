@@ -1,5 +1,5 @@
 /*--------------------------------------------------------*/
-/* ----------------  Proyecto Final (WP) --------------------------*/
+/* ----------------  Proyecto Final --------------------------*/
 /*-----------------    2022-2  ---------------------------*/
 /*-------- Alumno: Saúl Abraham Esparza Rivera -----------*/
 /*-------- Cuenta: 314041502 -----------------------------*/
@@ -87,7 +87,7 @@ int main( )
     glfwWindowHint( GLFW_RESIZABLE, GL_FALSE );
     
     // Create a GLFWwindow object that we can use for GLFW's functions
-    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "[WP] Proyecto final", nullptr, nullptr ); // Le pongo WP por aquello del Work in Progress
+    GLFWwindow *window = glfwCreateWindow( WIDTH, HEIGHT, "Proyecto final - Saul Esparza - Cafe", nullptr, nullptr );
     
     if ( nullptr == window )
     {
