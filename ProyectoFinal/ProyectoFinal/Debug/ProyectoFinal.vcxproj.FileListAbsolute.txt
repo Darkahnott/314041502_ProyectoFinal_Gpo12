@@ -1,2 +1,0 @@
-C:\Users\SAUL HABRAHAM\Outside Onedrive\Escuela\Computación Gráfica\314041502_ProyectoFinal_Gpo12\ProyectoFinal\Debug\ProyectoFinal.exe.lastcodeanalysissucceeded
-C:\Users\SAUL HABRAHAM\Outside Onedrive\Escuela\Computación Gráfica\314041502_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\Debug\NativeCodeAnalysis.read.1.tlog

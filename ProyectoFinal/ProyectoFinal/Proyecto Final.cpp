@@ -31,13 +31,14 @@
 #include "Texture.h"
 
 // Properties
-const GLuint WIDTH = 1080, HEIGHT = 720;
+const GLuint WIDTH = 1500, HEIGHT = 1200;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Function prototypes
 void KeyCallback( GLFWwindow *window, int key, int scancode, int action, int mode );
 void MouseCallback( GLFWwindow *window, double xPos, double yPos );
 void DoMovement( );
+void animacion();
 
 
 // Camera
@@ -50,8 +51,28 @@ bool firstMouse = true;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
-float rot = 0.0f;
-bool anim, anim2;
+float rot = 90.0f, rot2 = 0.0f, rot3 = -90.0f;
+bool anim = false;
+
+float posVueloX = -13.74f, posVueloY = 7.4f, posVueloZ = 13.69f;
+
+float R2PosX = -4.756f, R2PosY = 1.2f, R2PosZ = 8.93f;
+
+
+bool circuito = false;
+bool recorrido1 = true;
+bool recorrido2 = false;
+bool recorrido3 = false;
+bool recorrido4 = false;
+bool recorrido5 = true;
+bool recorrido6 = false;
+bool recorrido7 = false;
+bool recorrido8 = false;
+bool recorrido9 = false;
+bool recorrido10 = false;
+bool recorrido11 = false;
+bool recorrido12 = false;
+bool recorrido13 = false;
 
 
 int main( )
@@ -201,9 +222,24 @@ int main( )
     glEnableVertexAttribArray(2);
 
     // Load textures
-    Model Cafe((char*)"Models/Cafe New/Cafe.obj");
+
+
+    //Base del escenario
     Model Base((char*)"Models/Base/Base.obj");
 
+    //Cafetería
+    Model Cafe((char*)"Models/Cafe New/Cafe.obj");
+
+    //Dinosaurio
+    Model CuerpoDino((char*)"Models/Dino/body.obj");
+    Model AlaIzq((char*)"Models/Dino/AlaIzq.obj");
+    Model AlaDer((char*)"Models/Dino/AlaDer.obj");
+
+    //Ventilador
+    Model BaseVentilador((char*)"Models/Vent/Base.obj");
+    Model Aspas((char*)"Models/Vent/Aspas.obj");
+    Model Vader((char*)"Models/Vader/Vader.obj");
+    Model R2D2((char*)"Models/R2D2/R2.obj");
 
 
     GLuint texture;
@@ -253,6 +289,7 @@ int main( )
         // Check and call events
         glfwPollEvents();
         DoMovement();
+        animacion();
 
         // Clear the colorbuffer
         glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -276,7 +313,7 @@ int main( )
         Base.Draw(shader);
         glBindVertexArray(0);
 
-        //Piso del café
+        //Café
         model = glm::mat4(1);
         tmp = model = glm::translate(model, glm::vec3(-9.5f, 0.48f, 12.0f));
         model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
@@ -286,8 +323,70 @@ int main( )
         glBindVertexArray(0);
 
 
+        //Cuerpo del dinosaurio
+        model = glm::mat4(1);
+        tmp = model = glm::translate(model, glm::vec3(posVueloX, posVueloY, posVueloZ));
+        model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
+        model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        CuerpoDino.Draw(shader);
+        glBindVertexArray(0);
+
+        //Ala izquierda del dinosaurio
+        model = glm::mat4(1);
+        model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
+        model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        AlaIzq.Draw(shader);
+        glBindVertexArray(0);
+
+        //Ala derecha del dinosaurio
+        model = glm::mat4(1);
+        model = glm::translate(tmp, glm::vec3(0.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
+        model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        AlaDer.Draw(shader);
+        glBindVertexArray(0);
 
 
+        //Base del ventilador
+        model = glm::mat4(1);
+        tmp = model = glm::translate(model, glm::vec3(-7.2f, 3.1f, 8.83f));
+        model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
+        model = glm::rotate(model, glm::radians(rot2), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        BaseVentilador.Draw(shader);
+        glBindVertexArray(0);
+
+        //Aspas del ventilador
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-7.2f, 3.09f, 8.83f));
+        model = glm::scale(model, glm::vec3(0.13f, 0.13f, 0.13f));
+        model = glm::rotate(model, glm::radians(rot2), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        Aspas.Draw(shader);
+        glBindVertexArray(0);
+
+
+        //Vader
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(-6.46f, 1.50f, 8.93f));
+        model = glm::scale(model, glm::vec3(0.20f, 0.20f, 0.20f));
+        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        Vader.Draw(shader);
+        glBindVertexArray(0);
+
+        //R2D2
+        model = glm::mat4(1);
+        model = glm::translate(model, glm::vec3(R2PosX, R2PosY, R2PosZ));
+        model = glm::scale(model, glm::vec3(0.20f, 0.20f, 0.20f));
+        model = glm::rotate(model, glm::radians(rot3), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        R2D2.Draw(shader);
+        glBindVertexArray(0);
 
 
         glActiveTexture(GL_TEXTURE0);
@@ -353,8 +452,153 @@ void DoMovement( )
         camera.ProcessKeyboard( RIGHT, deltaTime );
     }
 
- 
+    if (keys[GLFW_KEY_I])
+    {
+        anim = true;
+    }
 
+    if (keys[GLFW_KEY_O])
+    {
+        anim = false;
+    }
+
+
+}
+
+void animacion() {
+    if (anim) {
+
+        //Mov Dinosaurio
+        if (recorrido1) {
+            rot = 90;
+            posVueloX += 0.05f;
+            if (posVueloX > 1) {
+                recorrido1 = false;
+                recorrido2 = true;
+            }
+        }
+
+        if (recorrido2) {
+            rot = 180;
+            posVueloZ -= 0.05f;
+            if (posVueloZ < 2) {
+                recorrido2 = false;
+                recorrido3 = true;
+
+            }
+
+        }
+
+        if (recorrido3) {
+            rot = -90;
+            posVueloX -= 0.05f;
+            if (posVueloX < -12) {
+                recorrido3 = false;
+                recorrido4 = true;
+            }
+        }
+
+        if (recorrido4) {
+            rot = 0;
+            posVueloZ += 0.05f;
+            if (posVueloZ > 13) {
+                recorrido4 = false;
+                recorrido1 = true;
+            }
+        }
+
+
+        //Mov R2D2
+        if (recorrido5) {
+            rot3 = 0;
+            R2PosZ += 0.03f;
+            if (R2PosZ > 15.0) {
+                recorrido5 = false;
+                recorrido6 = true;
+            }
+        }
+
+        if (recorrido6) {
+            rot3 = -90;
+            R2PosX -= 0.03f;
+            if (R2PosX < -7.0) {
+                rot3 = 0;
+                recorrido6 = false;
+                recorrido7 = true;
+
+            }
+
+        }
+
+        if (recorrido7) {
+            rot3 = -90;
+            R2PosX -= 0.03f;
+            if (R2PosX < -12) {
+                rot3 = 0;
+                recorrido7 = false;
+                recorrido8 = true;
+            }
+        }
+
+        if (recorrido8) {
+            rot3 = -90;
+            R2PosX -= 0.03f;
+            if (R2PosX < -10) {
+                rot3 = 0;
+                recorrido8 = false;
+                recorrido9 = true;
+            }
+        }
+
+        if (recorrido9) {
+            rot3 =-90;
+            R2PosX -= 0.03f;
+            if (R2PosX < -13) {
+                rot3 = 0;
+                recorrido9 = false;
+                recorrido10 = true;
+            }
+        }
+
+        if (recorrido10) {
+            rot3 = -180;
+            R2PosZ -= 0.03f;
+            if (R2PosZ < 13) {
+                recorrido10 = false;
+                recorrido11 = true;
+            }
+        }
+
+        if (recorrido11) {
+            rot3 = 90;
+            R2PosX += 0.03f;
+            if (R2PosZ > -11) {
+                rot3 = 90;
+                recorrido11 = false;
+                recorrido12 = true;
+            }
+        }
+
+        if (recorrido12) {
+            rot3 = 90;
+            R2PosX += 0.03f;
+            if (R2PosX > -11) {
+                recorrido12 = false;
+                recorrido13 = true;
+            }
+        }
+
+        if (recorrido13) {
+            rot3 = 90;
+            R2PosX += 0.03f;
+            if (R2PosX > -3.8) {
+                recorrido13 = false;
+                recorrido5 = true;
+            }
+        }
+
+        rot2 += 0.1;
+    }
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -376,25 +620,6 @@ void KeyCallback( GLFWwindow *window, int key, int scancode, int action, int mod
             keys[key] = false;
         }
     }
-
-
-    if (keys[GLFW_KEY_O] && rot <= 20) {
-        anim2 = false;
-        anim = true;
-
-    }
-
-    if (keys[GLFW_KEY_O] && rot > 0) {
-        anim = false;
-        anim2 = true;
-
-    }
-
-
-
-
- 
-
  
 }
 

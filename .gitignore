@@ -32,3 +32,5 @@ ProyectoFinal/.vs/ProyectoFinal/project-colors.json
 ProyectoFinal/.vs/ProyectoFinal/v17/.suo
 ProyectoFinal/.vs/ProyectoFinal/v17/Browse.VC.db
 *.ipch
+ProyectoFinal/ProyectoFinal/Models/Cafe New/Cafe.obj
+*.opendb
