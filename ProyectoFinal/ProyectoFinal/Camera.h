@@ -24,8 +24,8 @@ enum Camera_Movement
 // Default camera values
 const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 8.0f;
-const GLfloat SENSITIVTY = 0.13f;
+const GLfloat SPEED = 5.0f;
+const GLfloat SENSITIVTY = 0.08f;
 const GLfloat ZOOM = 45.0f;
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
@@ -56,7 +56,7 @@ public:
 	glm::mat4 GetViewMatrix()
 	{
 		//Imprimir la posición de la cámara
-		std::cout << "La posicion actual de la camara es: " << glm::to_string(position) << "\n" << std::endl; //F por los acentos
+		//std::cout << "La posicion actual de la camara es: " << glm::to_string(position) << "\n" << std::endl; //F por los acentos
 
 		return glm::lookAt(this->position, this->position + this->front, this->up);
 	}
